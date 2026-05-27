@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>찾아가는 일자리버스 참가자 명단</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI','Noto Sans KR',sans-serif;background:#F5F5F3;color:#1A1A18;min-height:100vh;}
+.wrap{max-width:900px;margin:0 auto;padding:1.25rem 1rem 3rem;}
+.header-card{background:#fff;border:1px solid #E5E5E3;border-radius:14px;padding:1.1rem 1.25rem;margin-bottom:1rem;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+.header-badge{font-size:11px;font-weight:600;background:#E6F1FB;color:#0C447C;padding:2px 10px;border-radius:99px;display:inline-block;margin-bottom:6px;}
+.header-main{font-size:16px;font-weight:600;color:#1A1A18;margin-bottom:10px;}
+.header-fields{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+@media(max-width:540px){.header-fields{grid-template-columns:1fr 1fr;}}
+.hf{display:flex;flex-direction:column;gap:4px;}
+.hf label{font-size:11px;color:#666;}
+.hf input,.hf select{border:1px solid #DDD;border-radius:8px;padding:8px 10px;font-size:14px;font-family:inherit;color:#1A1A18;background:#fff;width:100%;}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:1rem;}
+.stat{background:#fff;border:1px solid #E5E5E3;border-radius:10px;padding:10px 14px;box-shadow:0 1px 3px rgba(0,0,0,0.04);}
+.stat-label{font-size:11px;color:#888;margin-bottom:3px;}
+.stat-val{font-size:22px;font-weight:600;color:#1A1A18;}
+.toolbar{display:flex;gap:8px;margin-bottom:10px;flex-wrap:wrap;}
+.toolbar input[type=text]{flex:1;min-width:130px;padding:9px 12px;border:1px solid #DDD;border-radius:8px;font-size:14px;font-family:inherit;color:#1A1A18;background:#fff;}
+.toolbar select{padding:9px 10px;border:1px solid #DDD;border-radius:8px;font-size:13px;font-family:inherit;color:#1A1A18;background:#fff;}
+.btn{padding:9px 15px;border:1px solid #CCC;border-radius:8px;font-size:14px;font-family:inherit;cursor:pointer;background:#fff;color:#1A1A18;white-space:nowrap;}
+.btn:active{opacity:0.8;}
+.btn-primary{background:#185FA5;color:#fff;border-color:#185FA5;font-weight:500;}
+.tbl-wrap{background:#fff;border:1px solid #E5E5E3;border-radius:14px;overflow:hidden;margin-bottom:10px;overflow-x:auto;box-shadow:0 1px 4px rgba(0,0,0,0.05);}
+table{width:100%;border-collapse:collapse;min-width:560px;}
+thead tr{background:#F9F9F8;}
+th{padding:10px 8px;font-size:11px;font-weight:600;color:#888;text-align:center;border-bottom:1px solid #EBEBEA;white-space:nowrap;}
+th.left{text-align:left;}
+td{padding:10px 8px;font-size:13px;color:#1A1A18;border-bottom:1px solid #EBEBEA;vertical-align:middle;text-align:center;}
+td.left{text-align:left;}
+tr:last-child td{border-bottom:none;}
+tr:active td{background:#F9F9F8;}
+.badge{display:inline-block;font-size:12px;padding:3px 10px;border-radius:99px;font-weight:500;cursor:pointer;white-space:nowrap;-webkit-tap-highlight-color:transparent;}
+.b-agree{background:#EAF3DE;color:#27500A;}
+.b-disagree{background:#FCEBEB;color:#791F1F;}
+.b-wait{background:#F1EFE8;color:#555552;}
+.b-join{background:#EEEDFE;color:#3C3489;}
+.b-done{background:#EAF3DE;color:#27500A;}
+.b-age1{background:#E6F1FB;color:#0C447C;}
+.b-age2{background:#EEEDFE;color:#3C3489;}
+.b-age3{background:#FAEEDA;color:#633806;}
+.act-btn{padding:5px 10px;font-size:13px;border:1px solid #E0E0DE;border-radius:7px;cursor:pointer;background:transparent;color:#888;font-family:inherit;margin:0 1px;-webkit-tap-highlight-color:transparent;}
+.act-del{color:#B94040;}
+.modal-bg{display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:100;align-items:flex-end;justify-content:center;padding:0;}
+@media(min-width:600px){.modal-bg{align-items:center;padding:1rem;}}
+.modal-bg.open{display:flex;}
+.modal{background:#fff;border-radius:18px 18px 0 0;padding:1.5rem 1.25rem 2rem;width:100%;max-width:500px;max-height:92vh;overflow-y:auto;}
+@media(min-width:600px){.modal{border-radius:14px;}}
+.modal-title{font-size:16px;font-weight:600;margin-bottom:1rem;color:#1A1A18;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:10px;}
+.frow.full{grid-template-columns:1fr;}
+.frow.three{grid-template-columns:1fr 1fr 1fr;}
+.fg{display:flex;flex-direction:column;gap:5px;}
+.fg label{font-size:12px;color:#666;font-weight:500;}
+.fg input,.fg select,.fg textarea{border:1px solid #DDD;border-radius:9px;padding:10px 11px;font-size:15px;font-family:inherit;color:#1A1A18;background:#fff;width:100%;}
+.fg input:focus,.fg select:focus,.fg textarea:focus{outline:none;border-color:#185FA5;}
+.notice{background:#E6F1FB;border-radius:9px;padding:10px 12px;font-size:11px;color:#0C447C;line-height:1.6;margin-bottom:12px;}
+.mfooter{display:flex;gap:8px;justify-content:flex-end;margin-top:1.1rem;}
+.empty{text-align:center;padding:3rem;color:#AAA;font-size:14px;}
+.toast{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);background:#1A1A1A;color:#fff;padding:11px 22px;border-radius:10px;font-size:13px;z-index:200;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;}
+.toast.show{opacity:1;}
+.sync-badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;color:#666;padding:4px 10px;border:1px solid #E0E0DE;border-radius:99px;background:#F9F9F8;}
+.dot{width:7px;height:7px;border-radius:50%;background:#27A06A;flex-shrink:0;}
+.dot.spin{background:#185FA5;animation:blink 1s linear infinite;}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:0.3}}
+.row-count{font-size:12px;color:#999;text-align:right;padding-bottom:.5rem;}
+</style>
+</head>
+<body>
+<div id="toast" class="toast"></div>
+<div class="wrap">
+
+  <div class="header-card">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:8px;margin-bottom:8px;">
+      <div>
+        <div class="header-badge">26년 충남형 일자리 소통공간</div>
+        <div class="header-main">찾아가는 일자리버스 참가자 명단</div>
+      </div>
+      <div class="sync-badge" id="sync-badge"><span class="dot" id="sync-dot"></span><span id="sync-text">Sheets 연동됨</span></div>
+    </div>
+    <div class="header-fields">
+      <div class="hf"><label>일시</label><input type="date" id="h-date"></div>
+      <div class="hf"><label>장소</label><input type="text" id="h-place" placeholder="장소 입력"></div>
+      <div class="hf"><label>프로그램명</label>
+        <select id="h-prog">
+          <option value="">선택</option>
+          <option>워크넷 구인·구직 상담</option>
+          <option>심층컨설팅</option>
+          <option>면접 전략 (이미지메이킹)</option>
+          <option>AI 활용 교육</option>
+          <option>기타</option>
+        </select>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="stat"><div class="stat-label">전체 참가자</div><div class="stat-val" id="s-total">0</div></div>
+    <div class="stat"><div class="stat-label">참여 / 완료</div><div class="stat-val" id="s-attend" style="color:#3C3489">0</div></div>
+    <div class="stat"><div class="stat-label">동의율</div><div class="stat-val" id="s-agree">-</div></div>
+  </div>
+
+  <!-- 등록 모달 -->
+  <div class="modal-bg" id="modal-bg">
+    <div class="modal">
+      <div class="modal-title" id="modal-title">참가자 등록</div>
+      <div class="notice">[개인정보 수집 및 활용동의 안내] (재)충남경제진흥원에서는 귀하의 성명, 연락처 등 개인정보를 직업교육 정보제공 및 취업알선 목적으로 수집·활용합니다. (보존기간: 행사일부터 1년)</div>
+      <div class="frow">
+        <div class="fg"><label>성명 *</label><input id="f-name" type="text" placeholder="홍길동"></div>
+        <div class="fg"><label>지역 (시·군) *</label><input id="f-region" type="text" placeholder="예: 천안시"></div>
+      </div>
+      <div class="frow three">
+        <div class="fg"><label>연령대 *</label>
+          <select id="f-age"><option value="">선택</option><option>39세 이하</option><option>40~59세</option><option>60세 이상</option></select>
+        </div>
+        <div class="fg"><label>성별</label>
+          <select id="f-gender"><option value="">선택</option><option>남성</option><option>여성</option></select>
+        </div>
+        <div class="fg"><label>동의 *</label>
+          <select id="f-agree"><option value="동의">동의</option><option value="부동의">부동의</option></select>
+        </div>
+      </div>
+      <div class="frow">
+        <div class="fg"><label>연락처</label><input id="f-phone" type="tel" placeholder="010-0000-0000"></div>
+        <div class="fg"><label>참여 상태</label>
+          <select id="f-attend"><option value="대기">대기</option><option value="참여">참여</option><option value="완료">완료</option></select>
+        </div>
+      </div>
+      <div class="frow full">
+        <div class="fg"><label>메모</label><textarea id="f-memo" rows="2" placeholder="특이사항 등"></textarea></div>
+      </div>
+      <div class="mfooter">
+        <button class="btn" onclick="closeModal()">취소</button>
+        <button class="btn btn-primary" id="save-btn" onclick="saveEntry()">저장 + 시트 전송</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toolbar">
+    <input type="text" id="search" placeholder="성명·지역·연락처 검색..." oninput="render()">
+    <select id="f-age-f" onchange="render()">
+      <option value="">전체 연령</option>
+      <option>39세 이하</option><option>40~59세</option><option>60세 이상</option>
+    </select>
+    <select id="f-att-f" onchange="render()">
+      <option value="">참여 전체</option>
+      <option>대기</option><option>참여</option><option>완료</option>
+    </select>
+    <button class="btn btn-primary" onclick="openModal()">+ 등록</button>
+    <button class="btn" onclick="exportCSV()">CSV</button>
+  </div>
+
+  <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="left" style="width:28px">#</th>
+          <th class="left" style="width:64px">지역</th>
+          <th class="left" style="width:60px">성명</th>
+          <th style="width:72px">연령대</th>
+          <th style="width:108px">연락처</th>
+          <th style="width:42px">성별</th>
+          <th style="width:52px">동의</th>
+          <th style="width:52px">참여</th>
+          <th class="left">메모</th>
+          <th style="width:60px">관리</th>
+        </tr>
+      </thead>
+      <tbody id="tbl-body"></tbody>
+    </table>
+  </div>
+  <div class="row-count" id="row-count"></div>
+</div>
+
+<script>
+var SHEET_URL='https://script.google.com/macros/s/AKfycbyRCvW6BKEmyTrK7PnMdkjmHiSdciftgj3EWsfpMUjPfMHdkpa2ngZnaJucZ5tq_73UVA/exec';
+var data=[];
+var editId=null;
+var ATTEND_ORDER=['대기','참여','완료'];
+var ATTEND_CLASS={'대기':'b-wait','참여':'b-join','완료':'b-done'};
+
+function uid(){return Date.now()+Math.random().toString(36).slice(2);}
+function today(){var d=new Date();return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');}
+document.getElementById('h-date').value=today();
+
+// 로컬 저장
+function save(){try{localStorage.setItem('jari_data',JSON.stringify(data));}catch(e){}}
+function load(){try{var s=localStorage.getItem('jari_data');if(s)data=JSON.parse(s);}catch(e){}}
+
+function toast(msg,err){
+  var t=document.getElementById('toast');
+  t.textContent=msg;
+  t.style.background=err?'#7A1F1F':'#1A1A1A';
+  t.classList.add('show');
+  setTimeout(function(){t.classList.remove('show');},2500);
+}
+function setSyncing(on){
+  document.getElementById('sync-dot').className='dot'+(on?' spin':'');
+  document.getElementById('sync-text').textContent=on?'저장 중...':'Sheets 연동됨';
+}
+
+function sendToSheet(entry){
+  setSyncing(true);
+  var payload=Object.assign({},entry,{
+    hDate:document.getElementById('h-date').value,
+    hPlace:document.getElementById('h-place').value,
+    hProg:document.getElementById('h-prog').value
+  });
+  fetch(SHEET_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(function(){toast('✓ Google Sheets에 저장됐어요');})
+    .catch(function(){toast('⚠ 저장 실패 — 인터넷 확인 필요',true);})
+    .finally(function(){setSyncing(false);});
+}
+
+function openModal(id){
+  editId=id||null;
+  if(id){
+    var r=data.find(function(x){return x.id===id;});
+    document.getElementById('modal-title').textContent='참가자 수정';
+    document.getElementById('f-name').value=r.name;
+    document.getElementById('f-region').value=r.region;
+    document.getElementById('f-age').value=r.age;
+    document.getElementById('f-gender').value=r.gender;
+    document.getElementById('f-agree').value=r.agree;
+    document.getElementById('f-phone').value=r.phone;
+    document.getElementById('f-attend').value=r.attend;
+    document.getElementById('f-memo').value=r.memo;
+    document.getElementById('save-btn').textContent='수정 + 시트 전송';
+  } else {
+    document.getElementById('modal-title').textContent='참가자 등록';
+    ['f-name','f-region','f-phone','f-memo'].forEach(function(i){document.getElementById(i).value='';});
+    document.getElementById('f-age').value='';
+    document.getElementById('f-gender').value='';
+    document.getElementById('f-agree').value='동의';
+    document.getElementById('f-attend').value='대기';
+    document.getElementById('save-btn').textContent='저장 + 시트 전송';
+  }
+  document.getElementById('modal-bg').classList.add('open');
+}
+function closeModal(){document.getElementById('modal-bg').classList.remove('open');}
+
+function saveEntry(){
+  var name=document.getElementById('f-name').value.trim();
+  var region=document.getElementById('f-region').value.trim();
+  var age=document.getElementById('f-age').value;
+  if(!name){alert('성명을 입력해주세요.');return;}
+  if(!region){alert('지역을 입력해주세요.');return;}
+  if(!age){alert('연령대를 선택해주세요.');return;}
+  var entry={
+    id:editId||uid(),name:name,region:region,age:age,
+    gender:document.getElementById('f-gender').value,
+    agree:document.getElementById('f-agree').value,
+    phone:document.getElementById('f-phone').value.trim(),
+    attend:document.getElementById('f-attend').value,
+    memo:document.getElementById('f-memo').value.trim()
+  };
+  if(editId){var idx=data.findIndex(function(x){return x.id===editId;});data[idx]=entry;}
+  else{data.push(entry);}
+  save();closeModal();render();
+  sendToSheet(entry);
+}
+
+function deleteEntry(id){
+  if(!confirm('삭제하시겠습니까?\n(Google Sheets 기록은 유지됩니다)'))return;
+  data=data.filter(function(x){return x.id!==id;});
+  save();render();
+}
+function cycleAttend(id){
+  var r=data.find(function(x){return x.id===id;});
+  r.attend=ATTEND_ORDER[(ATTEND_ORDER.indexOf(r.attend)+1)%ATTEND_ORDER.length];
+  save();render();sendToSheet(r);
+}
+function toggleAgree(id){
+  var r=data.find(function(x){return x.id===id;});
+  r.agree=r.agree==='동의'?'부동의':'동의';
+  save();render();sendToSheet(r);
+}
+function ageClass(a){
+  if(a==='39세 이하')return 'b-age1';
+  if(a==='40~59세')return 'b-age2';
+  return 'b-age3';
+}
+function filtered(){
+  var q=(document.getElementById('search').value||'').toLowerCase();
+  var fa=document.getElementById('f-age-f').value;
+  var ft=document.getElementById('f-att-f').value;
+  return data.filter(function(r){
+    return(!q||(r.name+r.region+r.phone).toLowerCase().includes(q))&&(!fa||r.age===fa)&&(!ft||r.attend===ft);
+  });
+}
+function render(){
+  var rows=filtered();
+  var total=data.length;
+  var att=data.filter(function(r){return r.attend==='참여'||r.attend==='완료';}).length;
+  var ag=data.filter(function(r){return r.agree==='동의';}).length;
+  document.getElementById('s-total').textContent=total;
+  document.getElementById('s-attend').textContent=att;
+  document.getElementById('s-agree').textContent=total?Math.round(ag/total*100)+'%':'-';
+  document.getElementById('row-count').textContent='검색 '+rows.length+'명 / 전체 '+total+'명';
+  var tbody=document.getElementById('tbl-body');
+  if(!rows.length){
+    tbody.innerHTML='<tr><td colspan="10"><div class="empty">등록된 참가자가 없습니다<br><small style="font-size:12px;color:#BBB;margin-top:6px;display:block">+ 등록 버튼을 눌러 추가하세요</small></div></td></tr>';
+    return;
+  }
+  tbody.innerHTML=rows.map(function(r,i){
+    return '<tr>'+
+      '<td class="left" style="color:#BBB">'+(i+1)+'</td>'+
+      '<td class="left">'+esc(r.region)+'</td>'+
+      '<td class="left" style="font-weight:600">'+esc(r.name)+'</td>'+
+      '<td><span class="badge '+ageClass(r.age)+'">'+esc(r.age)+'</span></td>'+
+      '<td style="font-size:12px;color:#888">'+esc(r.phone||'-')+'</td>'+
+      '<td>'+esc(r.gender||'-')+'</td>'+
+      '<td><span class="badge '+(r.agree==='동의'?'b-agree':'b-disagree')+'" onclick="toggleAgree(\''+r.id+'\')">'+r.agree+'</span></td>'+
+      '<td><span class="badge '+ATTEND_CLASS[r.attend]+'" onclick="cycleAttend(\''+r.id+'\')" title="클릭하여 변경">'+r.attend+'</span></td>'+
+      '<td class="left" style="font-size:11px;color:#999">'+esc(r.memo||'')+'</td>'+
+      '<td>'+
+        '<button class="act-btn" onclick="openModal(\''+r.id+'\')">✏</button>'+
+        '<button class="act-btn act-del" onclick="deleteEntry(\''+r.id+'\')">✕</button>'+
+      '</td>'+
+    '</tr>';
+  }).join('');
+}
+function esc(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+function exportCSV(){
+  if(!data.length){alert('내보낼 데이터가 없습니다.');return;}
+  var date=document.getElementById('h-date').value;
+  var place=document.getElementById('h-place').value;
+  var prog=document.getElementById('h-prog').value;
+  var header=['번호','지역(시·군)','성명','연령대','연락처','성별','개인정보동의','참여상태','메모'];
+  var rows=data.map(function(r,i){
+    return [i+1,r.region,r.name,r.age,r.phone,r.gender,r.agree,r.attend,r.memo]
+      .map(function(v){return'"'+(v||'').replace(/"/g,'""')+'"';}).join(',');
+  });
+  var csv='\uFEFF"일시:'+date+' / 장소:'+place+' / 프로그램:'+prog+'"\n\n'+header.join(',')+'\n'+rows.join('\n');
+  var blob=new Blob([csv],{type:'text/csv;charset=utf-8'});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement('a');
+  a.href=url;a.download='일자리버스_참가자명단_'+date+'.csv';a.click();
+  URL.revokeObjectURL(url);
+}
+
+load();render();
+</script>
+</body>
+</html>
