@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>예약 관리 | 2026년 충남 청년네트워킹데이</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  /* 기관 전용색 — 신청 페이지와 동일 */
+  --brand:#0B3C7D;
+  --brand-d:#072A58;
+
+  --brand-soft:#EBF1F9;
+  --brand-line:#C3D3E8;
+  --bg:#F1F3F6;--card:#FFFFFF;
+  --ink:#111820;--ink2:#4E5967;--ink3:#8792A0;
+  --line:#E2E6EC;--line2:#C8CFD8;
+  --ok:#136B49;--ok-soft:#E7F1EC;
+  --warn:#8A6516;--warn-soft:#FBF3E0;
+  --stop:#9E2B22;--stop-soft:#FAEDEB;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
+}
+body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);color:var(--ink);
+  font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;}
+button,input,select{font-family:inherit;}
+:focus-visible{outline:2px solid var(--brand);outline-offset:2px;}
+
+.topline{height:4px;background:var(--brand);}
+.top{background:var(--card);border-bottom:1px solid var(--line);padding:12px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
+.emblem{width:21px;height:21px;border-radius:3px;background:var(--brand);color:#fff;flex:none;
+  display:grid;place-items:center;font-size:10.5px;font-weight:700;letter-spacing:-.04em;}
+.top .org{font-size:12px;color:var(--ink3);border-left:1px solid var(--line);padding-left:10px;}
+.top h1{font-size:15px;font-weight:700;color:var(--brand);}
+.top .who{margin-left:auto;font-size:12px;color:var(--ink2);display:flex;align-items:center;gap:8px;}
+.ghost{background:none;border:1px solid var(--line2);color:var(--ink2);border-radius:4px;padding:6px 12px;font-size:12px;cursor:pointer;}
+.ghost:hover{background:var(--bg);color:var(--ink);}
+.ghost.danger{color:var(--stop);border-color:#EBCFCB;}
+.shell{max-width:1180px;margin:0 auto;padding:18px 20px 60px;}
+
+.login{max-width:380px;margin:80px auto;background:var(--card);border:1px solid var(--line);
+  border-radius:4px;padding:34px 28px;text-align:center;}
+.login h2{font-size:17px;font-weight:700;margin-bottom:6px;}
+.login p{font-size:13px;color:var(--ink2);margin-bottom:20px;}
+.gbtn{width:100%;padding:12px;border:1px solid var(--line2);border-radius:4px;background:var(--card);
+  font-size:14px;font-weight:500;cursor:pointer;}
+.gbtn:hover{background:var(--bg);}
+
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px;}
+.mc{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:13px 15px;}
+.mc .l{font-size:12px;color:var(--ink2);}
+.mc .v{font-size:21px;font-weight:700;letter-spacing:-.02em;margin-top:2px;}
+
+.sec{font-size:12px;font-weight:700;color:var(--ink2);margin:20px 2px 9px;display:flex;align-items:center;gap:8px;}
+.sec .act{margin-left:auto;display:flex;gap:6px;}
+
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;}
+.col{background:var(--card);border:1px solid var(--line);border-radius:4px;overflow:hidden;}
+.col .hd{background:var(--brand);color:#fff;padding:9px 14px;font-size:13px;font-weight:700;display:flex;gap:8px;}
+.col .hd span{margin-left:auto;font-weight:400;opacity:.85;}
+.row{display:flex;align-items:center;gap:9px;padding:9px 14px;border-top:1px solid var(--line);}
+.row:first-of-type{border-top:none;}
+.row .time{font-size:12.5px;font-weight:700;width:48px;flex:none;color:var(--ink2);}
+.row .who2{flex:1;min-width:0;font-size:13.5px;}
+.row .who2 .nm{font-weight:500;}
+.row .who2 .ph{font-size:11.5px;color:var(--ink3);}
+.row.empty .who2{color:var(--ink3);font-size:12.5px;}
+.badge{font-size:10.5px;font-weight:700;border-radius:5px;padding:1px 6px;white-space:nowrap;}
+.b-dup{background:var(--warn-soft);color:var(--warn);border:1px solid #E8D5A8;}
+.b-walk{background:var(--brand-soft);color:var(--brand);border:1px solid var(--brand-line);}
+.b-full{background:var(--stop-soft);color:var(--stop);}
+.b-left{background:var(--ok-soft);color:var(--ok);}
+.mini{background:none;border:none;color:var(--ink3);cursor:pointer;font-size:12px;width:26px;height:26px;border-radius:4px;flex:none;}
+.att{background:var(--card);border:1px solid var(--line2);color:var(--ink2);cursor:pointer;
+  font-size:11px;font-weight:700;padding:4px 9px;border-radius:4px;flex:none;white-space:nowrap;}
+.att:hover{border-color:var(--ok);color:var(--ok);}
+.att.on{background:var(--ok);border-color:var(--ok);color:#fff;}
+.mini:hover{background:var(--bg);color:var(--stop);}
+
+.tbl{background:var(--card);border:1px solid var(--line);border-radius:4px;overflow:auto;}
+table{width:100%;border-collapse:collapse;font-size:13px;}
+th{background:var(--bg);text-align:left;padding:9px 12px;font-weight:700;color:var(--ink2);font-size:12px;white-space:nowrap;border-bottom:1px solid var(--line);}
+td{padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap;}
+tr:last-child td{border-bottom:none;}
+
+.panel{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:16px;}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;}
+.f{display:flex;flex-direction:column;gap:5px;}
+.f label{font-size:12px;color:var(--ink2);font-weight:500;}
+.f input,.f select{font-size:13px;padding:9px 11px;border:1px solid var(--line2);border-radius:4px;background:var(--card);}
+.f input:focus,.f select:focus{outline:none;border-color:var(--brand);}
+.go{background:var(--brand);color:#fff;border:none;padding:10px 18px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;}
+.go:hover{background:var(--brand-d);}
+.msg{font-size:12px;margin-left:8px;}
+.msg.ok{color:var(--ok);} .msg.err{color:var(--stop);}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:13px;}
+.hint{font-size:11.5px;color:var(--ink3);margin-top:8px;}
+</style>
+</head>
+<body>
+
+<div id="login-view" style="display:none;">
+  <div class="login">
+    <div class="emblem" style="margin:0 auto 14px;width:34px;height:34px;font-size:14px;">CN</div>
+    <h2>1:1 상담 사전예약 관리</h2>
+    <p>2026년 충남 청년네트워킹데이<br>충남일자리경제진흥원 충남일자리종합센터</p>
+    <input type="password" id="pw" placeholder="관리자 비밀번호" autocomplete="current-password"
+      onkeydown="if(event.key==='Enter')login()"
+      style="width:100%;font-size:15px;padding:12px 13px;border:1px solid var(--line2);border-radius:4px;margin-bottom:10px;text-align:center;">
+    <button class="gbtn" id="login-btn" onclick="login()" style="background:var(--brand);color:#fff;border-color:var(--brand);font-weight:700;">입장</button>
+    <p id="login-msg" style="margin:14px 0 0;color:var(--stop);font-size:13px;"></p>
+  </div>
+</div>
+
+<div id="app-view" style="display:none;">
+  <div class="topline"></div>
+  <div class="top">
+    <span class="emblem">CN</span>
+    <h1>1:1 상담 사전예약 관리</h1>
+    <span class="org">2026년 충남 청년네트워킹데이</span>
+    <span class="badge b-left" id="open-state">접수중</span>
+    <div class="who">
+      <span id="who"></span>
+      <button class="ghost" onclick="exportCsv()">엑셀 내려받기</button>
+      <button class="ghost" onclick="logout()">로그아웃</button>
+    </div>
+  </div>
+
+  <div class="shell">
+    <div class="cards" id="cards"></div>
+
+    <div class="sec">회차별 현황
+      <span class="act"><button class="ghost" onclick="toggleView()" id="vbtn">명단으로 보기</button></span>
+    </div>
+    <div id="board"></div>
+    <div id="list" style="display:none;"></div>
+
+    <div class="sec">현장 접수</div>
+    <div class="panel">
+      <div class="grid" style="margin-bottom:12px;">
+        <div class="f"><label>이름</label><input type="text" id="w-name" placeholder="홍길동"></div>
+        <div class="f"><label>연락처</label><input type="tel" id="w-phone" placeholder="010-1234-5678"></div>
+        <div class="f"><label>상담 분야</label><select id="w-track"></select></div>
+        <div class="f"><label>시간</label><select id="w-slot"></select></div>
+      </div>
+      <button class="go" onclick="addWalkIn()">예약 추가</button>
+      <span id="w-msg" class="msg"></span>
+      <div class="hint">현장에서 받은 예약을 직접 넣습니다. 정원이 찬 회차도 추가할 수 있어요.</div>
+    </div>
+
+    <div class="sec">운영 설정</div>
+    <div class="panel">
+      <div class="grid" style="margin-bottom:12px;">
+        <div class="f"><label>시작 시각</label><input type="time" id="c-start"></div>
+        <div class="f"><label>종료 시각</label><input type="time" id="c-end"></div>
+        <div class="f"><label>회차 길이 (분)</label><input type="number" id="c-min" min="5" max="60" step="5"></div>
+        <div class="f"><label>회차·트랙당 정원</label><input type="number" id="c-cap" min="1" max="20"></div>
+      </div>
+      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+        <button class="go" onclick="saveCfg()">설정 저장</button>
+        <label class="switch"><input type="checkbox" id="c-open" style="width:auto;"> 신청 접수 열기</label>
+        <span id="c-msg" class="msg"></span>
+      </div>
+      <div class="hint">시간을 바꿔도 이미 들어온 예약은 그대로 남습니다. 접수를 닫으면 신청 페이지에 마감 안내가 뜹니다.</div>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js';
+import { getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-auth.js';
+import { getFirestore, doc, getDoc, setDoc, deleteDoc, collection, addDoc, onSnapshot,
+         runTransaction, serverTimestamp }
+  from 'https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js';
+
+/* ════════════════════════════════════════════════
+   ① Firebase 설정 — 신청 페이지와 같은 값을 넣으세요
+   ② ADMIN_EMAIL — 콘솔에 만들어 둔 관리자 계정 주소를 적으세요
+   ════════════════════════════════════════════════ */
+const firebaseConfig = {
+  apiKey: "AIzaSyC9kEfmFLlWhxXdE-B72DJhHPIJlqwDSok",
+  authDomain: "networking-day-2026.firebaseapp.com",
+  projectId: "networking-day-2026",
+  storageBucket: "networking-day-2026.firebasestorage.app",
+  messagingSenderId: "367967346348",
+  appId: "1:367967346348:web:636acc1f330016c628c909"
+};
+/* 관리자 계정 — Firebase 콘솔 Authentication 에 '이메일/비밀번호'로 만들어 둔 주소.
+   비밀번호는 여기 적지 않습니다. 화면에서 입력한 값을 Firebase 가 직접 확인합니다. */
+const ADMIN_EMAIL = 'star05@cepa.or.kr';
+
+const app  = initializeApp(firebaseConfig);
+const auth = getAuth(app);
+const db   = getFirestore(app);
+
+const TRACKS = [
+  {id:'A', tag:'A 트랙', title:'11/20 쿠팡 대규모 채용 관련 상담'},
+  {id:'B', tag:'B 트랙', title:'맞춤형 일반 취업 지원 상담'},
+];
+let CFG = { open:true, start:'13:50', end:'17:50', slotMin:10, capacity:2 };
+let bookings = [];
+let viewList = false;
+
+const toMin = s=>{const[h,m]=s.split(':').map(Number);return h*60+m;};
+const toHHMM= m=>String(Math.floor(m/60)).padStart(2,'0')+':'+String(m%60).padStart(2,'0');
+const key   = (t,s)=>`${t}_${s.replace(':','')}`;
+const esc   = s=>(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+const digits= s=>(s||'').replace(/\D/g,'');
+
+function slotList(){
+  const a=toMin(CFG.start), b=toMin(CFG.end), n=Number(CFG.slotMin)||10;
+  const out=[]; for(let t=a;t+n<=b;t+=n) out.push(toHHMM(t));
+  return out;
+}
+
+/* ───── 로그인 ───── */
+window.login = async function(){
+  const pw=document.getElementById('pw').value;
+  const msg=document.getElementById('login-msg');
+  const btn=document.getElementById('login-btn');
+  if(!pw){ msg.textContent='비밀번호를 입력해 주세요.'; return; }
+  btn.disabled=true; btn.textContent='확인 중…'; msg.textContent='';
+  try{
+    await signInWithEmailAndPassword(auth, ADMIN_EMAIL, pw);
+  }catch(e){
+    const c=e.code||'';
+    msg.textContent = (c.includes('wrong-password')||c.includes('invalid-credential'))
+      ? '비밀번호가 올바르지 않습니다.'
+      : c.includes('too-many-requests')
+      ? '시도가 많아 잠시 차단되었습니다. 잠시 후 다시 시도해 주세요.'
+      : '로그인에 실패했습니다. 관리자 계정 설정을 확인해 주세요.';
+    document.getElementById('pw').value='';
+  }finally{
+    btn.disabled=false; btn.textContent='입장';
+  }
+}
+window.logout = ()=>signOut(auth);
+
+let started=false;
+onAuthStateChanged(auth, async user=>{
+  const login=document.getElementById('login-view'), appv=document.getElementById('app-view');
+  if(!user || user.email!==ADMIN_EMAIL){
+    login.style.display='block'; appv.style.display='none';
+    if(user) await signOut(auth);
+    return;
+  }
+  login.style.display='none'; appv.style.display='block';
+  document.getElementById('pw').value='';
+  document.getElementById('who').textContent='관리자';
+  if(!started){ started=true; start(); }
+});
+
+/* ───── 데이터 ───── */
+function start(){
+  onSnapshot(doc(db,'config','settings'), s=>{
+    if(s.exists()) CFG={...CFG,...s.data()};
+    fillCfg(); fillWalkIn(); render();
+  });
+  onSnapshot(collection(db,'bookings'), ss=>{
+    bookings=[]; ss.forEach(d=>bookings.push({id:d.id,...d.data()}));
+    render();
+  });
+}
+
+/* 같은 연락처로 2건 이상이면 중복 */
+function dupSet(){
+  const n={}; bookings.forEach(b=>{const k=digits(b.phone); if(k)n[k]=(n[k]||0)+1;});
+  return new Set(Object.keys(n).filter(k=>n[k]>1));
+}
+
+function render(){
+  const slots=slotList(), dups=dupSet();
+
+  document.getElementById('open-state').textContent = CFG.open?'접수중':'접수마감';
+  document.getElementById('open-state').className = 'badge '+(CFG.open?'b-left':'b-full');
+
+  const total=bookings.length;
+  const perTrack=TRACKS.map(t=>bookings.filter(b=>b.track===t.id).length);
+  const cap=slots.length*CFG.capacity;
+  const att=bookings.filter(b=>b.attended).length;
+  document.getElementById('cards').innerHTML=`
+    <div class="mc"><div class="l">총 예약</div><div class="v">${total}명</div></div>
+    ${TRACKS.map((t,i)=>`<div class="mc"><div class="l">${t.tag}</div>
+      <div class="v">${perTrack[i]}<span style="font-size:13px;color:var(--ink3);font-weight:400;"> / ${cap}</span></div></div>`).join('')}
+    <div class="mc"><div class="l">참석</div><div class="v" style="color:var(--ok);">${att}<span style="font-size:13px;color:var(--ink3);font-weight:400;"> / ${total}</span></div></div>
+    <div class="mc"><div class="l">미참석</div><div class="v">${total-att}명</div></div>
+    <div class="mc"><div class="l">중복 신청자</div><div class="v" style="color:var(--warn);">${dups.size}명</div></div>`;
+
+  // 회차별 보드
+  document.getElementById('board').innerHTML=`<div class="board">${TRACKS.map(t=>`
+    <div class="col">
+      <div class="hd">${t.tag} <span>${bookings.filter(b=>b.track===t.id).length}명</span></div>
+      ${slots.map(s=>{
+        const list=bookings.filter(b=>b.track===t.id&&b.slot===s)
+          .sort((a,b)=>(a.createdAt?.seconds||0)-(b.createdAt?.seconds||0));
+        if(!list.length) return `<div class="row empty"><span class="time">${s}</span>
+          <span class="who2">비어 있음</span><span class="badge b-left">${CFG.capacity}자리</span></div>`;
+        return list.map((b,i)=>`<div class="row">
+          <span class="time">${i===0?s:''}</span>
+          <span class="who2"><span class="nm">${esc(b.name)}</span>
+            ${dups.has(digits(b.phone))?'<span class="badge b-dup" style="margin-left:5px;">중복</span>':''}
+            ${b.source==='현장'?'<span class="badge b-walk" style="margin-left:4px;">현장</span>':''}
+            <span class="ph" style="display:block;">${esc(b.phone)}</span></span>
+          <button class="att ${b.attended?'on':''}" title="참석 표시" onclick="attend('${b.id}')">${b.attended?'참석 ✓':'참석'}</button>
+          <button class="mini" title="예약 취소" onclick="cancel('${b.id}')">✕</button>
+        </div>`).join('')
+        + (list.length<CFG.capacity ? `<div class="row empty"><span class="time"></span>
+            <span class="who2">여유</span><span class="badge b-left">${CFG.capacity-list.length}자리</span></div>` : '');
+      }).join('')}
+    </div>`).join('')}</div>`;
+
+  // 명단
+  const sorted=[...bookings].sort((a,b)=> a.slot===b.slot ? a.track.localeCompare(b.track) : a.slot.localeCompare(b.slot));
+  document.getElementById('list').innerHTML = sorted.length ? `<div class="tbl"><table>
+    <thead><tr><th>시간</th><th>트랙</th><th>이름</th><th>연락처</th><th>참석</th><th>비고</th><th></th></tr></thead>
+    <tbody>${sorted.map(b=>`<tr>
+      <td style="font-weight:700;">${b.slot}</td>
+      <td>${TRACKS.find(t=>t.id===b.track)?.tag||b.track}</td>
+      <td style="font-weight:500;">${esc(b.name)}</td>
+      <td>${esc(b.phone)}</td>
+      <td><button class="att ${b.attended?'on':''}" onclick="attend('${b.id}')">${b.attended?'참석 ✓':'참석'}</button></td>
+      <td>${dups.has(digits(b.phone))?'<span class="badge b-dup">중복 신청</span> ':''}
+          ${b.source==='현장'?'<span class="badge b-walk">현장 접수</span>':''}</td>
+      <td><button class="mini" onclick="cancel('${b.id}')">✕</button></td>
+    </tr>`).join('')}</tbody></table></div>`
+    : '<div class="panel" style="text-align:center;color:var(--ink3);">아직 예약이 없습니다.</div>';
+}
+
+window.toggleView=function(){
+  viewList=!viewList;
+  document.getElementById('board').style.display=viewList?'none':'block';
+  document.getElementById('list').style.display=viewList?'block':'none';
+  document.getElementById('vbtn').textContent=viewList?'회차별로 보기':'명단으로 보기';
+}
+
+/* ───── 참석 표시 ───── */
+window.attend = async function(id){
+  const b=bookings.find(x=>x.id===id); if(!b) return;
+  try{ await setDoc(doc(db,'bookings',id),{attended:!b.attended},{merge:true}); }
+  catch(e){ alert('참석 표시에 실패했습니다. 다시 시도해 주세요.'); }
+}
+
+/* ───── 취소 ───── */
+window.cancel = async function(id){
+  const b=bookings.find(x=>x.id===id); if(!b) return;
+  if(!confirm(`${b.name} (${b.slot}, ${b.track}트랙) 예약을 취소할까요?`)) return;
+  try{
+    await runTransaction(db, async tx=>{
+      const slotRef=doc(db,'slots',key(b.track,b.slot));
+      const snap=await tx.get(slotRef);
+      const used=snap.exists()?(snap.data().count||0):0;
+      tx.set(slotRef,{track:b.track,slot:b.slot,count:Math.max(0,used-1)},{merge:true});
+      tx.delete(doc(db,'bookings',id));
+    });
+  }catch(e){ alert('취소에 실패했습니다. 다시 시도해 주세요.'); }
+}
+
+/* ───── 현장 접수 ───── */
+function fillWalkIn(){
+  const tsel=document.getElementById('w-track');
+  if(!tsel.options.length) tsel.innerHTML=TRACKS.map(t=>`<option value="${t.id}">${t.tag} · ${t.title}</option>`).join('');
+  const ssel=document.getElementById('w-slot'), keep=ssel.value;
+  ssel.innerHTML=slotList().map(s=>`<option>${s}</option>`).join('');
+  if(keep) ssel.value=keep;
+}
+window.addWalkIn = async function(){
+  const name=document.getElementById('w-name').value.trim();
+  const phone=document.getElementById('w-phone').value.trim();
+  const track=document.getElementById('w-track').value;
+  const slot=document.getElementById('w-slot').value;
+  const msg=document.getElementById('w-msg');
+  if(!name||!phone){ msg.textContent='이름과 연락처를 입력해 주세요'; msg.className='msg err'; return; }
+  try{
+    await runTransaction(db, async tx=>{
+      const slotRef=doc(db,'slots',key(track,slot));
+      const snap=await tx.get(slotRef);
+      const used=snap.exists()?(snap.data().count||0):0;
+      tx.set(slotRef,{track,slot,count:used+1},{merge:true});
+      tx.set(doc(collection(db,'bookings')),{name,phone,track,slot,status:'예약',source:'현장',createdAt:serverTimestamp()});
+    });
+    document.getElementById('w-name').value='';
+    document.getElementById('w-phone').value='';
+    msg.textContent='추가했습니다'; msg.className='msg ok';
+    setTimeout(()=>msg.textContent='',2500);
+  }catch(e){ msg.textContent='추가에 실패했습니다'; msg.className='msg err'; }
+}
+
+/* ───── 설정 ───── */
+function fillCfg(){
+  document.getElementById('c-start').value=CFG.start;
+  document.getElementById('c-end').value=CFG.end;
+  document.getElementById('c-min').value=CFG.slotMin;
+  document.getElementById('c-cap').value=CFG.capacity;
+  document.getElementById('c-open').checked=!!CFG.open;
+}
+window.saveCfg = async function(){
+  const msg=document.getElementById('c-msg');
+  const next={
+    start:document.getElementById('c-start').value||'13:50',
+    end:document.getElementById('c-end').value||'17:50',
+    slotMin:parseInt(document.getElementById('c-min').value)||10,
+    capacity:parseInt(document.getElementById('c-cap').value)||2,
+    open:document.getElementById('c-open').checked
+  };
+  if(toMin(next.end)<=toMin(next.start)){ msg.textContent='종료 시각이 시작보다 빨라요'; msg.className='msg err'; return; }
+  try{
+    await setDoc(doc(db,'config','settings'),next,{merge:true});
+    msg.textContent='저장했습니다'; msg.className='msg ok';
+    setTimeout(()=>msg.textContent='',2500);
+  }catch(e){ msg.textContent='저장에 실패했습니다'; msg.className='msg err'; }
+}
+
+/* ───── 내려받기 ───── */
+window.exportCsv = function(){
+  const dups=dupSet();
+  const rows=[['시간','트랙','이름','연락처','참석','접수경로','비고']];
+  [...bookings].sort((a,b)=> a.slot===b.slot ? a.track.localeCompare(b.track) : a.slot.localeCompare(b.slot))
+    .forEach(b=>rows.push([b.slot, b.track, b.name, b.phone, b.attended?'참석':'',
+      b.source||'온라인', dups.has(digits(b.phone))?'중복 신청':'']));
+  const csv='\uFEFF'+rows.map(r=>r.map(v=>`"${String(v??'').replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8'}));
+  a.download=`상담예약_${new Date().toISOString().slice(0,10)}.csv`;
+  a.click(); URL.revokeObjectURL(a.href);
+}
+
+document.getElementById('w-phone').addEventListener('input',e=>{
+  const v=digits(e.target.value).slice(0,11);
+  e.target.value = v.length>7 ? `${v.slice(0,3)}-${v.slice(3,7)}-${v.slice(7)}`
+                 : v.length>3 ? `${v.slice(0,3)}-${v.slice(3)}` : v;
+});
+</script>
+</body>
+</html>
