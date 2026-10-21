@@ -4,97 +4,171 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>예약 관리 | 2026년 충남 청년네트워킹데이</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
 <style>
 *{box-sizing:border-box;margin:0;padding:0;}
 :root{
   --brand:#203469;
-  --brand-d:#16244A;
-  --brand-soft:#EBF1F9;
-  --brand-line:#C3D3E8;
-  --bg:#F1F3F6;--card:#FFFFFF;
-  --ink:#111820;--ink2:#4E5967;--ink3:#8792A0;
-  --line:#E2E6EC;--line2:#C8CFD8;
-  --ok:#136B49;--ok-soft:#E7F1EC;
-  --warn:#8A6516;--warn-soft:#FBF3E0;
-  --stop:#9E2B22;--stop-soft:#FAEDEB;
+  --brand-d:#152347;
+  --brand-l:#324B8C;
+  --brand-soft:#EEF3FB;
+  --brand-line:#C5D5EC;
+  --bg:#F4F6F9;
+  --paper:#FFFFFF;
+  --ink:#111827;
+  --ink2:#4B5563;
+  --ink3:#8B95A5;
+  --line:#E5E8EB;
+  --line2:#D1D6DB;
+  --ok:#0D7A52;--ok-soft:#E6F4EE;
+  --warn:#9A6700;--warn-soft:#FEF5E7;
+  --stop:#C92A2A;--stop-soft:#FFF0F0;
+  --radius:14px;
+  --shadow:0 4px 20px rgba(17,24,39,.04), 0 1px 3px rgba(17,24,39,.02);
   padding-top:env(safe-area-inset-top,0px);
   padding-bottom:env(safe-area-inset-bottom,0px);
 }
-body{font-family:'Noto Sans KR',-apple-system,sans-serif;background:var(--bg);color:var(--ink);
-  font-size:14px;line-height:1.55;-webkit-font-smoothing:antialiased;font-variant-numeric:tabular-nums;}
+body{
+  font-family:'Pretendard',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--bg);color:var(--ink);
+  font-size:14.5px;line-height:1.6;-webkit-font-smoothing:antialiased;
+  font-variant-numeric:tabular-nums;
+}
 button,input,select{font-family:inherit;}
 :focus-visible{outline:2px solid var(--brand);outline-offset:2px;}
 
-.topline{height:4px;background:var(--brand);}
-.top{background:var(--card);border-bottom:1px solid var(--line);padding:12px 20px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;}
-.top .org{font-size:12px;color:var(--ink3);border-left:1px solid var(--line);padding-left:10px;}
-.top h1{font-size:15px;font-weight:700;color:var(--brand);}
-.top .who{margin-left:auto;font-size:12px;color:var(--ink2);display:flex;align-items:center;gap:8px;}
-.ghost{background:none;border:1px solid var(--line2);color:var(--ink2);border-radius:4px;padding:6px 12px;font-size:12px;cursor:pointer;}
-.ghost:hover{background:var(--bg);color:var(--ink);}
-.shell{max-width:1180px;margin:0 auto;padding:18px 20px 60px;}
+/* ── 상단 기관 헤더 & GNB ── */
+.topline{height:4px;background:linear-gradient(90deg,var(--brand) 0%,#3B5998 100%);}
+.top{
+  background:rgba(255,255,255,.92);backdrop-filter:blur(10px);
+  border-bottom:1px solid var(--line);position:sticky;top:0;z-index:30;
+  padding:13px 20px;display:flex;align-items:center;gap:12px;flex-wrap:wrap;
+  box-shadow:0 1px 3px rgba(17,24,39,.02);
+}
+.top h1{font-size:16px;font-weight:800;color:var(--brand);letter-spacing:-.02em;}
+.top .org{font-size:13px;font-weight:500;color:var(--ink2);border-left:1.5px solid var(--line2);padding-left:12px;}
+.top .who{margin-left:auto;font-size:13px;color:var(--ink2);display:flex;align-items:center;gap:10px;}
+.ghost{
+  background:var(--paper);border:1.5px solid var(--line2);color:var(--ink2);
+  border-radius:10px;padding:8px 14px;font-size:13px;font-weight:700;cursor:pointer;
+  transition:all .15s ease;box-shadow:0 2px 6px rgba(17,24,39,.02);
+}
+.ghost:hover{border-color:var(--brand);color:var(--brand);background:var(--bg);}
 
-.login{max-width:380px;margin:80px auto;background:var(--card);border:1px solid var(--line);
-  border-radius:4px;padding:34px 28px;text-align:center;}
-.login h2{font-size:17px;font-weight:700;margin-bottom:6px;}
-.login p{font-size:13px;color:var(--ink2);margin-bottom:20px;}
-.gbtn{width:100%;padding:12px;border:1px solid var(--line2);border-radius:4px;background:var(--card);
-  font-size:14px;font-weight:500;cursor:pointer;}
+.shell{max-width:1180px;margin:0 auto;padding:24px 20px 80px;}
 
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-bottom:18px;}
-.mc{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:13px 15px;}
-.mc .l{font-size:12px;color:var(--ink2);}
-.mc .v{font-size:21px;font-weight:700;letter-spacing:-.02em;margin-top:2px;}
+/* ── 로그인 화면 ── */
+.login{
+  max-width:400px;margin:90px auto;background:var(--paper);border:1px solid var(--line);
+  border-radius:var(--radius);padding:40px 30px;text-align:center;box-shadow:var(--shadow);
+  position:relative;overflow:hidden;
+}
+.login::before{content:'';position:absolute;left:0;top:0;right:0;height:4px;background:var(--brand);}
+.login h2{font-size:20px;font-weight:800;margin-bottom:8px;letter-spacing:-.02em;}
+.login p{font-size:13.5px;color:var(--ink2);margin-bottom:24px;line-height:1.5;}
+.gbtn{
+  width:100%;padding:13px;border:none;border-radius:10px;background:var(--brand);
+  color:#fff;font-size:15px;font-weight:800;cursor:pointer;
+  box-shadow:0 4px 12px rgba(32,52,105,.25);transition:all .15s ease;
+}
+.gbtn:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(32,52,105,.32);}
 
-.sec{font-size:12px;font-weight:700;color:var(--ink2);margin:20px 2px 9px;display:flex;align-items:center;gap:8px;}
+/* ── 대시보드 요약 카드 ── */
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-bottom:24px;}
+.mc{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  padding:18px;box-shadow:var(--shadow);position:relative;overflow:hidden;
+}
+.mc::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3.5px;background:var(--brand-line);}
+.mc:nth-child(2)::before{background:var(--brand);}
+.mc:nth-child(3)::before{background:#3B5998;}
+.mc:nth-child(4)::before{background:var(--ok);}
+.mc:nth-child(5)::before{background:var(--ink3);}
+.mc:nth-child(6)::before{background:var(--warn);}
+.mc .l{font-size:12.5px;color:var(--ink3);font-weight:600;}
+.mc .v{font-size:24px;font-weight:800;letter-spacing:-.02em;margin-top:4px;color:var(--ink);}
+
+/* ── 섹션 타이틀 ── */
+.sec{
+  font-size:16px;font-weight:800;color:var(--ink);margin:28px 2px 12px;
+  display:flex;align-items:center;gap:8px;letter-spacing:-.02em;
+}
 .sec .act{margin-left:auto;display:flex;gap:6px;}
 
-.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:14px;}
-.col{background:var(--card);border:1px solid var(--line);border-radius:4px;overflow:hidden;}
-.col .hd{background:var(--brand);color:#fff;padding:9px 14px;font-size:13px;font-weight:700;display:flex;gap:8px;}
-.col .hd span{margin-left:auto;font-weight:400;opacity:.85;}
-.row{display:flex;align-items:center;gap:9px;padding:9px 14px;border-top:1px solid var(--line);}
+/* ── 회차별 현황 보드 ── */
+.board{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px;}
+.col{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  overflow:hidden;box-shadow:var(--shadow);
+}
+.col .hd{
+  background:linear-gradient(135deg, var(--brand-d) 0%, var(--brand) 100%);
+  color:#fff;padding:14px 18px;font-size:14.5px;font-weight:800;display:flex;gap:8px;align-items:center;
+}
+.col .hd span{margin-left:auto;font-weight:600;opacity:.9;font-size:13px;background:rgba(255,255,255,.15);padding:2px 8px;border-radius:6px;}
+.row{display:flex;align-items:center;gap:10px;padding:12px 18px;border-top:1px solid var(--line);}
 .row:first-of-type{border-top:none;}
-.row.slothead{background:#FAFBFC;padding-top:6px;padding-bottom:6px;}
-.row.slothead .time{color:var(--ink);}
-.b-shut{background:#EFF1F4;color:var(--ink3);}
-.row .time{font-size:12.5px;font-weight:700;width:48px;flex:none;color:var(--ink2);}
-.row .who2{flex:1;min-width:0;font-size:13.5px;}
-.row .who2 .nm{font-weight:500;}
-.row .who2 .ph{font-size:11.5px;color:var(--ink3);}
-.badge{font-size:10.5px;font-weight:700;border-radius:5px;padding:1px 6px;white-space:nowrap;}
-.b-dup{background:var(--warn-soft);color:var(--warn);border:1px solid #E8D5A8;}
+.row.slothead{background:#FAFBFC;padding-top:10px;padding-bottom:10px;border-top:1.5px solid var(--line);}
+.row.slothead .time{color:var(--ink);font-size:14px;}
+.b-shut{background:#F1F3F6;color:var(--ink3);border:1px solid var(--line2);}
+.row .time{font-size:13.5px;font-weight:800;width:52px;flex:none;color:var(--ink2);}
+.row .who2{flex:1;min-width:0;font-size:14px;}
+.row .who2 .nm{font-weight:700;color:var(--ink);}
+.row .who2 .ph{font-size:12px;color:var(--ink3);margin-top:1px;}
+
+/* ── 뱃지 및 버튼 디자인 통일 ── */
+.badge{font-size:11.5px;font-weight:700;border-radius:6px;padding:3px 8px;white-space:nowrap;display:inline-flex;align-items:center;}
+.b-dup{background:var(--warn-soft);color:var(--warn);border:1px solid #F5D9A5;}
 .b-walk{background:var(--brand-soft);color:var(--brand);border:1px solid var(--brand-line);}
-.b-full{background:var(--stop-soft);color:var(--stop);}
-.b-left{background:var(--ok-soft);color:var(--ok);}
-.mini{background:none;border:none;color:var(--ink3);cursor:pointer;font-size:12px;width:26px;height:26px;border-radius:4px;flex:none;}
-.att{background:var(--card);border:1px solid var(--line2);color:var(--ink2);cursor:pointer;
-  font-size:11px;font-weight:700;padding:4px 9px;border-radius:4px;flex:none;white-space:nowrap;}
+.b-full{background:var(--stop-soft);color:var(--stop);border:1px solid #F5C2C7;}
+.b-left{background:var(--ok-soft);color:var(--ok);border:1px solid #B7E4C7;}
+
+.mini{
+  background:var(--paper);border:1.5px solid var(--line2);color:var(--ink3);cursor:pointer;
+  font-size:12px;width:28px;height:28px;border-radius:8px;flex:none;
+  display:grid;place-items:center;transition:all .15s;
+}
+.mini:hover{background:var(--stop-soft);border-color:var(--stop);color:var(--stop);}
+
+.att{
+  background:var(--paper);border:1.5px solid var(--line2);color:var(--ink2);cursor:pointer;
+  font-size:12px;font-weight:700;padding:5px 11px;border-radius:8px;flex:none;white-space:nowrap;
+  transition:all .15s;box-shadow:0 1px 2px rgba(17,24,39,.02);
+}
 .att:hover{border-color:var(--ok);color:var(--ok);}
 .att.on{background:var(--ok);border-color:var(--ok);color:#fff;}
-.mini:hover{background:var(--bg);color:var(--stop);}
 
-.tbl{background:var(--card);border:1px solid var(--line);border-radius:4px;overflow:auto;}
-table{width:100%;border-collapse:collapse;font-size:13px;}
-th{background:var(--bg);text-align:left;padding:9px 12px;font-weight:700;color:var(--ink2);font-size:12px;white-space:nowrap;border-bottom:1px solid var(--line);}
-td{padding:9px 12px;border-bottom:1px solid var(--line);white-space:nowrap;}
+/* ── 테이블 뷰 ── */
+.tbl{background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);overflow:auto;box-shadow:var(--shadow);}
+table{width:100%;border-collapse:collapse;font-size:14px;}
+th{background:var(--bg);text-align:left;padding:13px 16px;font-weight:700;color:var(--ink2);font-size:12.5px;white-space:nowrap;border-bottom:1px solid var(--line);}
+td{padding:13px 16px;border-bottom:1px solid var(--line);white-space:nowrap;color:var(--ink);}
 tr:last-child td{border-bottom:none;}
 
-.panel{background:var(--card);border:1px solid var(--line);border-radius:4px;padding:16px;}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;}
-.f{display:flex;flex-direction:column;gap:5px;}
-.f label{font-size:12px;color:var(--ink2);font-weight:500;}
-.f input,.f select{font-size:13px;padding:9px 11px;border:1px solid var(--line2);border-radius:4px;background:var(--card);}
-.f input:focus,.f select:focus{outline:none;border-color:var(--brand);}
-.go{background:var(--brand);color:#fff;border:none;padding:10px 18px;border-radius:4px;font-size:13px;font-weight:700;cursor:pointer;}
-.go:hover{background:var(--brand-d);}
-.msg{font-size:12px;margin-left:8px;}
+/* ── 패널 및 입력폼 ── */
+.panel{
+  background:var(--paper);border:1px solid var(--line);border-radius:var(--radius);
+  padding:22px;box-shadow:var(--shadow);
+}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;}
+.f{display:flex;flex-direction:column;gap:7px;}
+.f label{font-size:13px;color:var(--ink);font-weight:700;}
+.f input,.f select{
+  font-size:15px;padding:12px 14px;border:1.5px solid var(--line2);
+  border-radius:10px;background:#FAFBFC;transition:all .18s ease;
+}
+.f input:focus,.f select:focus{outline:none;border-color:var(--brand);background:var(--paper);box-shadow:0 0 0 4px var(--brand-soft);}
+.go{
+  background:linear-gradient(135deg, var(--brand) 0%, var(--brand-l) 100%);
+  color:#fff;border:none;padding:12px 24px;border-radius:10px;font-size:14.5px;
+  font-weight:800;cursor:pointer;box-shadow:0 4px 12px rgba(32,52,105,.25);transition:all .15s;
+}
+.go:hover{transform:translateY(-1px);box-shadow:0 6px 16px rgba(32,52,105,.32);}
+.msg{font-size:13px;margin-left:10px;font-weight:600;}
 .msg.ok{color:var(--ok);} .msg.err{color:var(--stop);}
-.switch{display:inline-flex;align-items:center;gap:8px;font-size:13px;}
-.hint{font-size:11.5px;color:var(--ink3);margin-top:8px;}
+.switch{display:inline-flex;align-items:center;gap:8px;font-size:14px;font-weight:700;cursor:pointer;}
+.switch input{width:20px;height:20px;accent-color:var(--brand);cursor:pointer;}
+.hint{font-size:12.5px;color:var(--ink3);margin-top:10px;line-height:1.5;}
 </style>
 </head>
 <body>
@@ -105,9 +179,9 @@ tr:last-child td{border-bottom:none;}
     <p>2026년 충남 청년네트워킹데이<br>충남일자리경제진흥원 충남일자리종합센터</p>
     <input type="password" id="pw" placeholder="관리자 비밀번호" autocomplete="current-password"
       onkeydown="if(event.key==='Enter')login()"
-      style="width:100%;font-size:15px;padding:12px 13px;border:1px solid var(--line2);border-radius:4px;margin-bottom:10px;text-align:center;">
-    <button class="gbtn" id="login-btn" onclick="login()" style="background:var(--brand);color:#fff;border-color:var(--brand);font-weight:700;">입장</button>
-    <p id="login-msg" style="margin:14px 0 0;color:var(--stop);font-size:13px;"></p>
+      style="width:100%;font-size:15px;padding:13px 15px;border:1.5px solid var(--line2);border-radius:10px;margin-bottom:14px;text-align:center;background:#FAFBFC;">
+    <button class="gbtn" id="login-btn" onclick="login()">입장</button>
+    <p id="login-msg" style="margin:16px 0 0;color:var(--stop);font-size:13px;font-weight:700;"></p>
   </div>
 </div>
 
@@ -115,10 +189,10 @@ tr:last-child td{border-bottom:none;}
   <div class="topline"></div>
   <div class="top">
     <h1>1:1 상담 사전예약 관리</h1>
-    <span class="org">2026년 충남 청년네트워킹데이</span>
-    <span class="badge b-left" id="open-state">접수중</span>
+    <span class="org"><b>2026년 충남 청년네트워킹데이</b></span>
+    <span class="badge b-left" id="open-state" style="margin-left:4px;">접수중</span>
     <div class="who">
-      <span id="who"></span>
+      <span id="who" style="font-weight:600;"></span>
       <button class="ghost" onclick="exportCsv()">엑셀 내려받기</button>
       <button class="ghost" onclick="logout()">로그아웃</button>
     </div>
@@ -135,20 +209,22 @@ tr:last-child td{border-bottom:none;}
 
     <div class="sec">현장 접수</div>
     <div class="panel">
-      <div class="grid" style="margin-bottom:12px;">
+      <div class="grid" style="margin-bottom:16px;">
         <div class="f"><label>이름</label><input type="text" id="w-name" placeholder="홍길동"></div>
         <div class="f"><label>연락처</label><input type="tel" id="w-phone" placeholder="010-1234-5678"></div>
         <div class="f"><label>상담 분야</label><select id="w-track"></select></div>
         <div class="f"><label>시간</label><select id="w-slot"></select></div>
       </div>
-      <button class="go" onclick="addWalkIn()">예약 추가</button>
-      <span id="w-msg" class="msg"></span>
+      <div style="display:flex;align-items:center;flex-wrap:wrap;gap:10px;">
+        <button class="go" onclick="addWalkIn()">예약 추가</button>
+        <span id="w-msg" class="msg"></span>
+      </div>
       <div class="hint">현장에서 받은 예약을 직접 넣습니다. 정원이 찬 회차도 추가할 수 있어요.</div>
     </div>
 
     <div class="sec">운영 설정</div>
     <div class="panel">
-      <div class="grid" style="margin-bottom:12px;">
+      <div class="grid" style="margin-bottom:18px;">
         <div class="f"><label>시작 시각</label><input type="time" id="c-start"></div>
         <div class="f"><label>종료 시각</label><input type="time" id="c-end"></div>
         <div class="f"><label>회차 길이 (분)</label><input type="number" id="c-min" min="5" max="60" step="5"></div>
@@ -157,9 +233,9 @@ tr:last-child td{border-bottom:none;}
         <div class="f"><label>행사 날짜</label><input type="date" id="c-date"></div>
         <div class="f"><label>자동 마감 (분 전)</label><input type="number" id="c-close" min="0" max="60"></div>
       </div>
-      <div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;">
+      <div style="display:flex;align-items:center;gap:20px;flex-wrap:wrap;">
         <button class="go" onclick="saveCfg()">설정 저장</button>
-        <label class="switch"><input type="checkbox" id="c-open" style="width:auto;"> 신청 접수 열기</label>
+        <label class="switch"><input type="checkbox" id="c-open"> 신청 접수 열기</label>
         <span id="c-msg" class="msg"></span>
       </div>
       <div class="hint">운영 시간은 13:50 ~ 16:20(마지막 회차 16:10), 정원은 A트랙 4명·B트랙 2명으로 설정되어 있습니다.</div>
@@ -320,7 +396,7 @@ function render(){
         const head=`<div class="row slothead">
           <span class="time">${s}</span>
           <span class="who2">${state}</span>
-          <button class="att ${shut?'on':''}" style="font-weight:500;"
+          <button class="att ${shut?'on':''}" style="font-weight:700;"
             onclick="toggleClose('${t.id}','${s}')">${shut?'열기':'마감'}</button>
         </div>`;
         if(!list.length) return head;
@@ -343,7 +419,7 @@ function render(){
     <tbody>${sorted.map(b=>`<tr>
       <td style="font-weight:700;">${b.slot}</td>
       <td>${TRACKS.find(t=>t.id===b.track)?.tag||b.track}</td>
-      <td style="font-weight:500;">${esc(b.name)}</td>
+      <td style="font-weight:700;">${esc(b.name)}</td>
       <td>${esc(b.phone)}</td>
       <td><button class="att ${b.attended?'on':''}" onclick="attend('${b.id}')">${b.attended?'참석 ✓':'참석'}</button></td>
       <td>${dups.has(digits(b.phone))?'<span class="badge b-dup">중복 신청</span> ':''}
